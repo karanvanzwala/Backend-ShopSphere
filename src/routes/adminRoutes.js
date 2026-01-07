@@ -3,13 +3,14 @@ const express = require("express");
 const adminRoutes = express.Router();
 
 
-adminRoutes.get("/admin", (req, res, next) => {
-    res.send("admin route")
-    console.log("admin route")
-    // res.render("home", {
-    //   registeredHomes: registeredHomes,
-    //   pageTitle: "airbnb Home",
-    // });
-});
+//local module
+
+const adminController = require("../controllers/adminContoller")
+
+
+adminRoutes.get("/admin/list", adminController.getAdminUsers);
+
+
+adminRoutes.post("/admin/adduser", adminController.postAddUser);
 
 module.exports = adminRoutes;
