@@ -17,6 +17,7 @@ module.exports = class User {
     }
 
     save() {
+        this.id = Math.random().toString();
         User.fetchAll((registeredUser) => {
 
             registeredUser.push(this);
@@ -25,9 +26,7 @@ module.exports = class User {
             fs.writeFile(userDataPath, JSON.stringify(registeredUser), (error) => {
                 console.log("File Writing Concluded", error);
             });
-            // fs.writeFile(userDataPath, JSON.stringify(registeredUser), (error) => {
-            //     console.log("File Writing Concluded", error);
-            // });
+
 
         });
     }
@@ -38,4 +37,14 @@ module.exports = class User {
             callback(!err ? JSON.parse(data) : []);
         });
     }
+    static findById(userId, callback) {
+
+        this.fetchAll(users => {
+
+            const foundUser = users.find(user => user.id == userId)
+            callback(foundUser)
+        })
+    }
+
+
 };
