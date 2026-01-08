@@ -13,7 +13,7 @@ exports.postAddUser = (req, res, next) => {
         address,
         gender);
 
-    console.log(",,,,....")
+ 
     user.save();
     res.send({
         message: "User created successfully!",
