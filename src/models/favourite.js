@@ -27,5 +27,10 @@ module.exports = class Favourite {
         });
     }
 
-
+    static deleteFavouriteById(userId, callback) {
+        this.getFavourites(favourites => {
+            const updatedFavourites = favourites.filter(favourite => favourite !== userId)
+            fs.writeFile(favouriteDataPath, JSON.stringify(updatedFavourites), callback);
+        });
+    }
 };

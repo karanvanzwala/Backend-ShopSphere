@@ -1,8 +1,5 @@
 // Core Modules
-const fs = require("fs");
-const path = require("path");
-const rootDir = require("../utils/pathUtil");
-
+const db = require("../utils/databaseUtil")
 module.exports = class User {
     constructor(fullName,
         email,
@@ -17,33 +14,22 @@ module.exports = class User {
     }
 
     save() {
-        this.id = Math.random().toString();
-        User.fetchAll((registeredUser) => {
-
-            registeredUser.push(this);
-            const userDataPath = path.join(rootDir, "/src/data", "user.json");
-
-            fs.writeFile(userDataPath, JSON.stringify(registeredUser), (error) => {
-                console.log("File Writing Concluded", error);
-            });
 
 
-        });
     }
 
     static fetchAll(callback) {
-        const userDataPath = path.join(rootDir, "/src/data", "user.json");
-        fs.readFile(userDataPath, (err, data) => {
-            callback(!err ? JSON.parse(data) : []);
-        });
+        return db.execute('SELECT * FROM users');
+
     }
     static findById(userId, callback) {
 
-        this.fetchAll(users => {
 
-            const foundUser = users.find(user => user.id == userId)
-            callback(foundUser)
-        })
+    }
+
+
+    static deleteById(userId, callback) {
+
     }
 
 
