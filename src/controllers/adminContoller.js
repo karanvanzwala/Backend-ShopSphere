@@ -25,6 +25,7 @@ exports.getAdminUsers = (req, res, next) => {
         res.send({
             userData: row,
         })
+
     }).catch((error) => {
         console.log("error while fetch user", error)
     })
