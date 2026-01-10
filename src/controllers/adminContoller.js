@@ -14,7 +14,6 @@ exports.postAddUser = (req, res, next) => {
         address,
         gender);
     user.save();
-
     res.send({
         message: "User created successfully!",
     });
@@ -25,7 +24,6 @@ exports.getAdminUsers = (req, res, next) => {
         res.send({
             userData: row,
         })
-
     }).catch((error) => {
         console.log("error while fetch user", error)
     })
@@ -34,7 +32,6 @@ exports.getAdminUsers = (req, res, next) => {
 exports.getUserDetails = (req, res, next) => {
     const userID = req.params.userId
     User.findById(userID, users => {
-
         res.send({
             userData: users,
         })
