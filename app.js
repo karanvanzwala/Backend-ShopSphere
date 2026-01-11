@@ -17,6 +17,7 @@ app.use(cors({
 
 const adminRoutes = require("./src/routes/adminRoutes");
 const userRoutes = require("./src/routes/userRoutes");
+const { mongoConnect } = require("./src/utils/databaseUtil");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -44,7 +45,10 @@ app.post("/admin/login", (req, res) => {
 
 
 
+
 const PORT = 3001;
-app.listen(PORT, () => {
-    console.log("Server is running on port 3001");
-});
+mongoConnect(client => {
+    app.listen(PORT, () => {
+        console.log("Server is running on port 3001");
+    });
+})

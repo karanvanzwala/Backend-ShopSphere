@@ -31,9 +31,9 @@ exports.getAdminUsers = (req, res, next) => {
 };
 exports.getUserDetails = (req, res, next) => {
     const userID = req.params.userId
-    User.findById(userID, users => {
+    User.findById(userID).then(([users]) => {
         res.send({
-            userData: users,
+            userData: users[0],
         })
     })
 
@@ -55,26 +55,28 @@ exports.postAddToFavourite = (req, res, next) => {
 }
 exports.postEditUser = (req, res, next) => {
     const { id, fullName, email, mobile, address, gender } = req.body;
-    const user = new User(fullName, email, mobile, address, gender);
-    user.id = id;
-    user.save();
-    res.send({
-        message: "Home edited successfully",
-    });
+    const user = new User(fullName, email, mobile, address, gender, id);
+
+    user.save().then(() => {
+        res.send({
+            message: "Home edited successfully",
+        });
+    }).catch(error => { console.log(error) });
 }
 exports.postDeleteUser = (req, res, next) => {
     const userID = req.params.userId
 
-    User.deleteById(userID, error => {
-        if (error) {
-            console.log("Error while deleting user: ", error);
-            res.send({
-                message: "Error while deleting user",
-            });
-        } else {
-            res.send({
-                message: "User deleted successfully",
-            });
-        }
+    User.deleteById(userID).then((res) => {
+        res.send({
+            message: "User deleted successfully",
+        });
+    }).catch(error => {
+        console.log("Error while deleting user: ", error);
+        res.send({
+            message: "Error while deleting user",
+        });
     })
+
+
+
 }
