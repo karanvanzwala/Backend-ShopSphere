@@ -1,4 +1,3 @@
-// Core Modules
 
 const { ObjectId } = require("mongodb");
 const { getDB } = require("../utils/databaseUtil");

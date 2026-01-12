@@ -1,7 +1,4 @@
-// const { getDB } = require("../utils/databaseUtil");
-
 const { getDB } = require("../utils/databaseUtil");
-
 
 module.exports = class Favourite {
 
