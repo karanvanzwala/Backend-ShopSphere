@@ -20,7 +20,7 @@ exports.postAddUser = (req, res, next) => {
 };
 
 exports.getAdminUsers = (req, res, next) => {
-    User.fetchAll().then(([row]) => {
+    User.fetchAll().then((row) => {
         res.send({
             userData: row,
         })
@@ -31,28 +31,47 @@ exports.getAdminUsers = (req, res, next) => {
 };
 exports.getUserDetails = (req, res, next) => {
     const userID = req.params.userId
-    User.findById(userID).then(([users]) => {
+
+    User.findById(userID).then((users) => {
+
+        console.log(".....")
         res.send({
-            userData: users[0],
+            userData: users,
         })
     })
 
 };
 exports.postAddToFavourite = (req, res, next) => {
+    const userId = req.body.id
 
-    Favourite.addToFavourites(req.body.id, error => {
-        if (error) {
-            console.log("Error while marking favourite: ", error);
-            res.send({
-                message: "already maked as favourite",
-            });
-        } else {
-            res.send({
-                message: "Add favourites successfully",
-            });
-        }
+    const fav = new Favourite(userId)
+
+    fav.save().then(result => {
+        res.send({
+            message: "already maked as favourite",
+        });
+
+    }).catch(error => {
+        res.send({
+            message: "Add favourites successfully",
+        });
     })
 }
+
+exports.getToFavouriteList = (req, res, next) => {
+
+    Favourite.getFavourites().then(favourites => {
+        favourites = favourites.map((fav => fav.userid))
+        User.fetchAll().then(regUser => {
+            const favouritesUsers = regUser.filter((userss) => favourites.includes(userss._id.toString())
+            )
+            console.log(favouritesUsers, "ppp.....")
+        })
+
+    })
+}
+
+
 exports.postEditUser = (req, res, next) => {
     const { id, fullName, email, mobile, address, gender } = req.body;
     const user = new User(fullName, email, mobile, address, gender, id);
@@ -66,7 +85,7 @@ exports.postEditUser = (req, res, next) => {
 exports.postDeleteUser = (req, res, next) => {
     const userID = req.params.userId
 
-    User.deleteById(userID).then((res) => {
+    User.deleteById(userID).then(() => {
         res.send({
             message: "User deleted successfully",
         });
