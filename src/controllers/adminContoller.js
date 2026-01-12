@@ -8,19 +8,24 @@ exports.postAddUser = (req, res, next) => {
         mobile,
         address,
         gender } = req.body;
-    const user = new User(fullName,
+    const user = new User({
+        fullName,
         email,
         mobile,
         address,
-        gender);
-    user.save();
-    res.send({
-        message: "User created successfully!",
+        gender
+    });
+    user.save().then(retult => {
+        res.send({
+            message: "User created successfully!",
+        });
+    }).catch(error => {
+        console.log(error, "<<>")
     });
 };
 
 exports.getAdminUsers = (req, res, next) => {
-    User.fetchAll().then((row) => {
+    User.find().then((row) => {
         res.send({
             userData: row,
         })
@@ -44,25 +49,42 @@ exports.getUserDetails = (req, res, next) => {
 exports.postAddToFavourite = (req, res, next) => {
     const userId = req.body.id
 
-    const fav = new Favourite(userId)
-
-    fav.save().then(result => {
-        res.send({
-            message: "already maked as favourite",
-        });
-
+    Favourite.findOne({ userid: userId }).then((fav) => {
+        if (fav) {
+            res.send({
+                message: "already maked as favourite",
+            });
+        } else {
+            fav = new Favourite({ userid: userId })
+            fav.save().then(() => {
+                res.send({
+                    message: "Add favourites successfully",
+                });
+            })
+        }
     }).catch(error => {
-        res.send({
-            message: "Add favourites successfully",
-        });
+        console.log(",,")
     })
+
+    // const fav = new Favourite(userId)
+
+    // fav.save().then(result => {
+    //     res.send({
+    //         message: "already maked as favourite",
+    //     });
+
+    // }).catch(error => {
+    //     res.send({
+    //         message: "Add favourites successfully",
+    //     });
+    // })
 }
 
 exports.getToFavouriteList = (req, res, next) => {
 
-    Favourite.getFavourites().then(favourites => {
-        favourites = favourites.map((fav => fav.userid))
-        User.fetchAll().then(regUser => {
+    Favourite.find().then(favourites => {
+        favourites = favourites.map((fav => fav.userid.toString()))
+        User.find().then(regUser => {
             const favouritesUsers = regUser.filter((userss) => favourites.includes(userss._id.toString())
             )
             console.log(favouritesUsers, "ppp.....")
@@ -74,18 +96,26 @@ exports.getToFavouriteList = (req, res, next) => {
 
 exports.postEditUser = (req, res, next) => {
     const { id, fullName, email, mobile, address, gender } = req.body;
-    const user = new User(fullName, email, mobile, address, gender, id);
+    // const user = new User(fullName, email, mobile, address, gender, id);
 
-    user.save().then(() => {
-        res.send({
-            message: "Home edited successfully",
-        });
+    User.findById(id).then((user) => {
+        user.fullName = fullName,
+            user.email = email,
+            user.mobile = mobile,
+            user.address = address,
+            user.gender = gender
+        user.save().then((result) => {
+            res.send({
+                message: "Home edited successfully",
+            });
+        })
     }).catch(error => { console.log(error) });
+
 }
 exports.postDeleteUser = (req, res, next) => {
     const userID = req.params.userId
 
-    User.deleteById(userID).then(() => {
+    User.findByIdAndDelete(userID).then(() => {
         res.send({
             message: "User deleted successfully",
         });

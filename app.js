@@ -17,7 +17,8 @@ app.use(cors({
 
 const adminRoutes = require("./src/routes/adminRoutes");
 const userRoutes = require("./src/routes/userRoutes");
-const { mongoConnect } = require("./src/utils/databaseUtil");
+// const { mongoConnect } = require("./src/utils/databaseUtil");
+const { default: mongoose } = require("mongoose");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -47,8 +48,18 @@ app.post("/admin/login", (req, res) => {
 
 
 const PORT = 3001;
-mongoConnect(client => {
+// mongoConnect(client => {
+//     app.listen(PORT, () => {
+//         console.log("Server is running on port 3001");
+//     });
+// })
+
+
+const dbpath = 'mongodb+srv://root:root@iamunstoppable.byrwt8a.mongodb.net/airbnb?appName=iamunstoppable'
+mongoose.connect(dbpath).then(() => {
     app.listen(PORT, () => {
         console.log("Server is running on port 3001");
     });
+}).catch((error) => {
+    console.log("error while connect mongoose db...", error)
 })
