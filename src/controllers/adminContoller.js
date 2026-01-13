@@ -25,6 +25,8 @@ exports.postAddUser = (req, res, next) => {
 };
 
 exports.getAdminUsers = (req, res, next) => {
+
+    console.log("session value", req.session)
     User.find().then((row) => {
         res.send({
             userData: row,
@@ -39,7 +41,7 @@ exports.getUserDetails = (req, res, next) => {
 
     User.findById(userID).then((users) => {
 
-        console.log(".....")
+
         res.send({
             userData: users,
         })

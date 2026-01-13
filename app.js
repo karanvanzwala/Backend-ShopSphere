@@ -1,6 +1,17 @@
 const express = require("express");
+
+const session = require("express-session")
 const cors = require("cors");
 
+const MongoDBStore = require("connect-mongodb-session")(session)
+
+const dbpath = 'mongodb+srv://root:root@iamunstoppable.byrwt8a.mongodb.net/airbnb?appName=iamunstoppable'
+
+
+const store = new MongoDBStore({
+    uri: dbpath,
+    collection: "session"
+})
 const app = express();
 
 
@@ -17,32 +28,31 @@ app.use(cors({
 
 const adminRoutes = require("./src/routes/adminRoutes");
 const userRoutes = require("./src/routes/userRoutes");
+const authRoutes = require("./src/routes/authRoutes")
 // const { mongoConnect } = require("./src/utils/databaseUtil");
 const { default: mongoose } = require("mongoose");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(session({
+    secret: "I Am Unstoppable",
+    resave: false,
+    saveUninitialized: true,
+    store
+}))
+
+app.use((req, res, next) => {
+    req.isLoggedIn = req.session.isLoggedIn
+    console.log("check cookie", req.get("Cookie"))
+    next()
+
+})
+
 app.use(adminRoutes);
 app.use(userRoutes);
+app.use(authRoutes);
 
-
-app.post("/admin/login", (req, res) => {
-    console.log("Login detasssssils received");
-    const { email, password } = req.body;
-    // For demonstration, log the received credentials
-    console.log("Login attempt:", { email, password });
-
-    // You can replace the below with your own authentication logic
-    // Respond back with the received data
-    res.json({
-        message: "Login details received",
-        data: {
-            email,
-            password
-        }
-    });
-});
 
 
 
@@ -55,7 +65,6 @@ const PORT = 3001;
 // })
 
 
-const dbpath = 'mongodb+srv://root:root@iamunstoppable.byrwt8a.mongodb.net/airbnb?appName=iamunstoppable'
 mongoose.connect(dbpath).then(() => {
     app.listen(PORT, () => {
         console.log("Server is running on port 3001");
