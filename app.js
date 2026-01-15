@@ -43,7 +43,11 @@ app.use(session({
 }))
 
 app.use((req, res, next) => {
-    req.isLoggedIn = req.session.isLoggedIn
+    // req.isLoggedIn = req.session.isLoggedIn
+    // req.user = req.session.user
+
+    console.log(req.session, "{{}}")
+
     console.log("check cookie", req.get("Cookie"))
     next()
 

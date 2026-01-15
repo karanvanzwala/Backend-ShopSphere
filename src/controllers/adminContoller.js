@@ -1,5 +1,6 @@
 const User = require("../models/user")
 const Favourite = require("../models/favourite")
+const bcrypt = require("bcryptjs");
 
 exports.postAddUser = (req, res, next) => {
 
@@ -7,21 +8,29 @@ exports.postAddUser = (req, res, next) => {
         email,
         mobile,
         address,
-        gender } = req.body;
-    const user = new User({
-        fullName,
-        email,
-        mobile,
-        address,
-        gender
-    });
-    user.save().then(retult => {
-        res.send({
-            message: "User created successfully!",
-        });
-    }).catch(error => {
-        console.log(error, "<<>")
-    });
+        gender, password } = req.body;
+
+
+    bcrypt.hash(password, 12)
+        .then(hashedPassword => {
+            const user = new User({
+                fullName,
+                email,
+                mobile,
+                address,
+                gender, password: hashedPassword,
+            });
+            return user.save();
+        })
+        .then(() => {
+            res.send({
+                message: "User created successfully!",
+            });
+        }).catch(err => {
+            console.log(err, "<<>>")
+
+        })
+
 };
 
 exports.getAdminUsers = (req, res, next) => {
