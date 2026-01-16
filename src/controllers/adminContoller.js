@@ -47,10 +47,7 @@ exports.getAdminUsers = (req, res, next) => {
 };
 exports.getUserDetails = (req, res, next) => {
     const userID = req.params.userId
-
     User.findById(userID).then((users) => {
-
-
         res.send({
             userData: users,
         })

@@ -1,11 +1,13 @@
 const express = require("express");
-
+const path = require('path');
 const session = require("express-session")
 const cors = require("cors");
-
+const rootDir = require("./src/utils/pathUtil");
 const MongoDBStore = require("connect-mongodb-session")(session)
 
 const dbpath = 'mongodb+srv://root:root@iamunstoppable.byrwt8a.mongodb.net/airbnb?appName=iamunstoppable'
+
+const multer = require("multer")
 
 
 const store = new MongoDBStore({
@@ -32,7 +34,39 @@ const authRoutes = require("./src/routes/authRoutes")
 // const { mongoConnect } = require("./src/utils/databaseUtil");
 const { default: mongoose } = require("mongoose");
 
+const randomString = (length) => {
+    const characters = 'abcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+}
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "src/uploads/");
+    },
+    filename: (req, file, cb) => {
+        cb(null, randomString(10) + '-' + file.originalname);
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+}
+const multerOptions = {
+    storage, fileFilter
+};
+
 app.use(express.urlencoded({ extended: true }));
+
+app.use(multer(multerOptions).single('photo'));
+app.use(express.static(path.join(rootDir, 'public')))
 app.use(express.json());
 
 app.use(session({
