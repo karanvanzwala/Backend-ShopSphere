@@ -19,6 +19,13 @@ adminRoutes.get("/admin/favourites/list", adminController.getToFavouriteList);
 adminRoutes.post("/admin/favourites", adminController.postAddToFavourite);
 adminRoutes.post("/admin/edit-user", adminController.postEditUser);
 adminRoutes.post("/admin/delete-user/:userId", adminController.postDeleteUser);
+
+
+
+
 adminRoutes.post("/admin/addproduct", productContoller.addProduct);
+adminRoutes.get("/admin/product/:productId", productContoller.getProductDetails);
+adminRoutes.get("/admin/getproduct/list", productContoller.getProductList);
+adminRoutes.post("/admin/edit-product", productContoller.postEditProduct);
 
 module.exports = adminRoutes;

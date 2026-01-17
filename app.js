@@ -67,6 +67,23 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(multer(multerOptions).single('photo'));
 app.use(express.static(path.join(rootDir, 'public')))
+app.use("/uploads", express.static(path.join(__dirname, "src", "uploads")));
+
+// app.use("/src/uploads", express.static(path.join(rootDir, 'uploads')))
+// app.use(
+//     "/uploads",
+//     express.static(path.join(__dirname, "/src", "uploads"))
+// );
+// app.use(
+//     "/uploads",
+//     express.static(path.join(process.cwd(), "src", "uploads"))
+// );
+
+
+
+// app.use("/host/uploads", express.static(path.join(rootDir, 'uploads')))
+// app.use("/homes/uploads", express.static(path.join(rootDir, 'uploads')))
+
 app.use(express.json());
 
 app.use(session({

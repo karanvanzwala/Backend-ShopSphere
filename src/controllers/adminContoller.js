@@ -35,7 +35,6 @@ exports.postAddUser = (req, res, next) => {
 
 exports.getAdminUsers = (req, res, next) => {
 
-    console.log("session value", req.session)
     User.find().then((row) => {
         res.send({
             userData: row,
