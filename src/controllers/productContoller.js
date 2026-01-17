@@ -67,7 +67,7 @@ exports.postEditProduct = (req, res, next) => {
         // }
 
         if (req.file) {
-            fs.unlink(product.photo, (err) => {
+            fs.unlink(`src/${product.photo}`, (err) => {
                 if (err) {
                     console.log("Error while deleting file ", err);
                 }
