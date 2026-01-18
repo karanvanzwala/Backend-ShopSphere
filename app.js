@@ -31,6 +31,7 @@ app.use(cors({
 const adminRoutes = require("./src/routes/adminRoutes");
 const userRoutes = require("./src/routes/userRoutes");
 const authRoutes = require("./src/routes/authRoutes")
+const productRoutes = require("./src/routes/productRoutes")
 // const { mongoConnect } = require("./src/utils/databaseUtil");
 const { default: mongoose } = require("mongoose");
 
