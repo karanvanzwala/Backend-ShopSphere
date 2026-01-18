@@ -108,6 +108,7 @@ app.use((req, res, next) => {
 app.use(adminRoutes);
 app.use(userRoutes);
 app.use(authRoutes);
+app.use(productRoutes);
 
 
 
